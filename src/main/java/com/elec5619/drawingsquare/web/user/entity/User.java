@@ -19,13 +19,13 @@ public class User implements Serializable {
     private String username;
 
     // 登陆密码
-    private String userpassword;
+    private String password;
 
     // 邮箱
-    private String useremail;
+    private String email;
 
     // 电话
-    private String userphone;
+    private String phone;
 
     // 钱包
     private int money;

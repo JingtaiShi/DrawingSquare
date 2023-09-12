@@ -26,7 +26,7 @@ public class UserController {
     public ResultVo login(@RequestBody User user){
         QueryWrapper<User> query = new QueryWrapper<>();
         query.lambda().eq(User::getUsername,user.getUsername())
-                .eq(User::getUserpassword,user.getUserpassword());
+                .eq(User::getPassword,user.getPassword());
         User one = userService.getOne(query);
         if(one == null){
             return ResultUtils.error("用户名或密码错误");
