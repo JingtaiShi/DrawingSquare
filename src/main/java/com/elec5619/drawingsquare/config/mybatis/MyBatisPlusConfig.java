@@ -13,7 +13,7 @@ import org.springframework.context.annotation.Configuration;
  * @create 2022-01-1311:01
  */
 @Configuration //配置类
-@MapperScan("com.elec5619.*.*.mapper") //指定mybatis plus扫描的mapp接口的地址
+@MapperScan("com.elec5619.drawingsquare.web.*.mapper") //指定mybatis plus扫描的mapper接口的地址
 public class MyBatisPlusConfig {
     // 最新版
     @Bean

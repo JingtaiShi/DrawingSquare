@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
  * 图画控制器
  */
 @RestController
+@RequestMapping("/api/painting")
 public class PaintingController {
     @Autowired
     private PaintingService paintingService;
@@ -48,7 +49,7 @@ public class PaintingController {
     }
 
     /**
-     * 删除问卷
+     * 删除绘画
      * @return
      */
     @DeleteMapping("/{paintingId}")
@@ -61,7 +62,7 @@ public class PaintingController {
     }
 
     /**
-     * 问卷列表
+     * 绘画列表
      */
     @GetMapping("/list")
     public ResultVo getList(PaintingParm paintingParm){

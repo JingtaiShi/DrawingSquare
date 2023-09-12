@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
  * 用户管理模块控制器
  */
 @RestController
+@RequestMapping("/api/user")
 public class UserController {
     @Autowired
     public UserService userService;
