@@ -9,9 +9,6 @@ import com.elec5619.drawingsquare.common.utils.ResultVo;
 import com.elec5619.drawingsquare.web.admin.entity.Admin;
 import com.elec5619.drawingsquare.web.admin.entity.AdminParm;
 import com.elec5619.drawingsquare.web.admin.service.AdminService;
-import com.elec5619.drawingsquare.web.user.entity.User;
-import com.elec5619.drawingsquare.web.user.entity.UserParm;
-import com.elec5619.drawingsquare.web.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -72,8 +69,8 @@ public class AdminController {
     /**
      * 删除
      */
-    @DeleteMapping("/{userId}")
-    public ResultVo delete(@PathVariable("userId") Long adminId){
+    @DeleteMapping("/{adminId}")
+    public ResultVo delete(@PathVariable("adminId") Long adminId){
         boolean b = adminService.removeById(adminId);
         if(b){
             return ResultUtils.success("删除用户成功!");
