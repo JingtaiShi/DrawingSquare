@@ -1,6 +1,7 @@
 package com.elec5619.drawingsquare.web.painting.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
@@ -32,4 +33,8 @@ public class Painting implements Serializable {
 
     // 点赞数
     private int paintingLikes;
+
+    // 绘画属性
+    @TableField(exist = false)
+    private PaintingAttributes paintingAttributes;
 }

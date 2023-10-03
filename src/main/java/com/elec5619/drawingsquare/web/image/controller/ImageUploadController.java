@@ -1,4 +1,4 @@
-package com.elec5619.drawingsquare.web.controller;
+package com.elec5619.drawingsquare.web.image.controller;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.RequestMapping;
