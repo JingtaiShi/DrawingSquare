@@ -1,4 +1,4 @@
-package com.elec5619.drawingsquare.web.user.controller;
+package com.elec5619.drawingsquare.web.admin.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -6,6 +6,9 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.elec5619.drawingsquare.common.utils.ResultUtils;
 import com.elec5619.drawingsquare.common.utils.ResultVo;
 
+import com.elec5619.drawingsquare.web.admin.entity.Admin;
+import com.elec5619.drawingsquare.web.admin.entity.AdminParm;
+import com.elec5619.drawingsquare.web.admin.service.AdminService;
 import com.elec5619.drawingsquare.web.user.entity.User;
 import com.elec5619.drawingsquare.web.user.entity.UserParm;
 import com.elec5619.drawingsquare.web.user.service.UserService;
@@ -16,38 +19,39 @@ import org.springframework.web.bind.annotation.*;
  * 用户管理模块控制器
  */
 @RestController
-@RequestMapping("/api/user")
-public class UserController {
+@RequestMapping("/api/admin")
+public class AdminController {
     @Autowired
-    public UserService userService;
+    public AdminService adminService;
+
     /**
      * 用户登录
      */
     @PostMapping("/login")
-    public ResultVo login(@RequestBody User user){
-        QueryWrapper<User> query = new QueryWrapper<>();
-        query.lambda().eq(User::getUsername,user.getUsername())
-                .eq(User::getPassword,user.getPassword());
-        User one = userService.getOne(query);
+    public ResultVo login(@RequestBody Admin admin){
+        QueryWrapper<Admin> query = new QueryWrapper<>();
+        query.lambda().eq(Admin::getAdminName,admin.getAdminName())
+                .eq(Admin::getAdminPassword,admin.getAdminPassword());
+        Admin one = adminService.getOne(query);
         if(one == null){
             return ResultUtils.error("用户名或密码错误");
         }
-        return ResultUtils.success("登录成功",one.getUserId());
+        return ResultUtils.success("登录成功",one.getAdminId());
     }
     /**
      * 获取用户信息
      */
     @GetMapping("/getInfo")
-    public ResultVo getInfo(Long userId){
-        User user = userService.getById(userId);
-        return ResultUtils.success("查询成功",user.getUsername());
+    public ResultVo getInfo(Long adminId){
+        Admin admin = adminService.getById(adminId);
+        return ResultUtils.success("查询成功",admin.getAdminName());
     }
     /**
      * 新增
      */
     @PostMapping
-    public ResultVo add(@RequestBody User user){
-        boolean save = userService.save(user);
+    public ResultVo add(@RequestBody Admin admin){
+        boolean save = adminService.save(admin);
         if(save){
             return ResultUtils.success("新增用户成功!");
         }
@@ -57,8 +61,8 @@ public class UserController {
      * 编辑
      */
     @PutMapping
-    public ResultVo edit(@RequestBody User user){
-        boolean b = userService.updateById(user);
+    public ResultVo edit(@RequestBody Admin admin){
+        boolean b = adminService.updateById(admin);
         if(b){
             return ResultUtils.success("编辑用户成功!");
         }
@@ -69,8 +73,8 @@ public class UserController {
      * 删除
      */
     @DeleteMapping("/{userId}")
-    public ResultVo delete(@PathVariable("userId") Long userId){
-        boolean b = userService.removeById(userId);
+    public ResultVo delete(@PathVariable("userId") Long adminId){
+        boolean b = adminService.removeById(adminId);
         if(b){
             return ResultUtils.success("删除用户成功!");
         }
@@ -81,12 +85,12 @@ public class UserController {
      * 列表查询
      */
     @GetMapping("/list")
-    public ResultVo getList(UserParm userParm){
+    public ResultVo getList(AdminParm adminParm){
         //构造分页对象
-        IPage<User> page = new Page<>();
-        page.setCurrent(userParm.getCurrentPage());
-        page.setSize(userParm.getPageSize());
-        IPage<User> list = userService.page(page);
+        IPage<Admin> page = new Page<>();
+        page.setCurrent(adminParm.getCurrentPage());
+        page.setSize(adminParm.getPageSize());
+        IPage<Admin> list = adminService.page(page);
         return ResultUtils.success("查询成功",list);
     }
 }

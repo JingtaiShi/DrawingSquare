@@ -8,6 +8,7 @@ import com.elec5619.drawingsquare.common.utils.ResultVo;
 import com.elec5619.drawingsquare.web.painting.entity.Painting;
 import com.elec5619.drawingsquare.web.painting.entity.PaintingParm;
 import com.elec5619.drawingsquare.web.painting.service.PaintingService;
+import com.elec5619.drawingsquare.web.user.entity.User;
 import io.micrometer.common.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -21,9 +22,17 @@ public class PaintingController {
     @Autowired
     private PaintingService paintingService;
 
-
+    /**
+     * 获取图画信息
+     */
+    @GetMapping("/getInfo")
+    public ResultVo getInfo(Long paintingId){
+        Painting painting = paintingService.getById(paintingId);
+        return ResultUtils.success("查询成功",painting.getPaintingName());
+    }
     /**
      * 新增图画
+     *
      * @param painting
      * @return
      */
@@ -40,9 +49,9 @@ public class PaintingController {
      * 编辑图画
      */
     @PutMapping
-    public ResultVo edit(@RequestBody Painting painting){
+    public ResultVo edit(@RequestBody Painting painting) {
         boolean b = paintingService.updateById(painting);
-        if(b){
+        if (b) {
             return ResultUtils.success("编辑问卷成功!");
         }
         return ResultUtils.error("编辑问卷失败!");
@@ -50,12 +59,13 @@ public class PaintingController {
 
     /**
      * 删除绘画
+     *
      * @return
      */
     @DeleteMapping("/{paintingId}")
-    public ResultVo delete(@PathVariable("paintingId") int paintingId){
+    public ResultVo delete(@PathVariable("paintingId") int paintingId) {
         boolean b = paintingService.removeById(paintingId);
-        if(b){
+        if (b) {
             return ResultUtils.success("删除画图成功!");
         }
         return ResultUtils.error("删除画图失败!");
@@ -65,21 +75,21 @@ public class PaintingController {
      * 绘画列表
      */
     @GetMapping("/list")
-    public ResultVo getList(PaintingParm paintingParm){
-        //构造分页对象
+    public ResultVo getList(PaintingParm paintingParm) {
+        // 构造分页对象
         IPage<Painting> page = new Page<>();
         page.setSize(paintingParm.getPageSize());
         page.setCurrent(paintingParm.getCurrentPage());
-        //构造查询条件
+        // 构造查询条件
         QueryWrapper<Painting> query = new QueryWrapper<>();
-        //模糊查询
-        if(StringUtils.isNotEmpty(paintingParm.getPaintingName())){
-            query.lambda().like(Painting::getPaintingName,paintingParm.getPaintingName());
+        // 模糊查询
+        if (StringUtils.isNotEmpty(paintingParm.getPaintingName())) {
+            query.lambda().like(Painting::getPaintingName, paintingParm.getPaintingName());
         }
-        //排序
-        query.lambda().orderByAsc(Painting::getPaintingId);
+        // 根据点赞量排序
+        query.lambda().orderByDesc(Painting::getPaintingLikes);
         IPage<Painting> list = paintingService.page(page, query);
-        return ResultUtils.success("查询成功",list);
+        return ResultUtils.success("查询成功", list);
     }
 
 }
