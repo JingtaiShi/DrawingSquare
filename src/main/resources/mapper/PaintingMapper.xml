@@ -4,4 +4,21 @@
 
 <mapper namespace="com.elec5619.drawingsquare.web.painting.mapper.PaintingMapper">
 
+<select id="listAttribute" resultType="com.elec5619.drawingsquare.web.painting.entity.PaintingAttributes">
+    select  * from painting_attributes
+    where
+        painting_id =#{paintingId}
+    </select>
+
+<select id="listLikedPainting" resultType="com.elec5619.drawingsquare.web.painting.entity.Painting">
+    select * from painting, likes
+    where
+        painting.painting_likes > 0 and #{userId} = likes.user_id and likes.painting_id = painting.painting_id
+    </select>
+
+<select id="listPurchasePainting" resultType="com.elec5619.drawingsquare.web.painting.entity.Painting">
+    select * from painting, purchased
+    where
+        #{userId} = purchased.user_id and purchased.paniting_id = painting.painting_id
+    </select>
 </mapper>
