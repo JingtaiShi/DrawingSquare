@@ -17,24 +17,34 @@ public class Painting implements Serializable {
     private int paintingId;
 
     // 用户Id
+    @TableField("user_id")
     private int userId;
 
     // 绘画名称
-    private String paintingName;
+    @TableField("painting_name")
+    private String title;
 
     // 绘画地址
-    private String paintingUrl;
+    @TableField("painting_url")
+    private String url;
 
     // 绘画状态
-    private String paintingStatus;
+    @TableField("painting_status")
+    private String status;
 
     // 绘画价格
-    private double paintingPrice;
+    @TableField("painting_price")
+    private double price;
 
     // 点赞数
-    private int paintingLikes;
+    @TableField("painting_likes")
+    private int likes;
 
     // 绘画属性
-    @TableField(exist = false)
-    private PaintingAttributes paintingAttributes;
+    @TableField("painting_tag")
+    private String tag;
+
+    // 绘画描述
+    @TableField("painting_description")
+    private String description;
 }

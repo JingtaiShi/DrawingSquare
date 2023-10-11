@@ -9,5 +9,5 @@ public class PaintingParm {
     //页容量 每页的条数
     private Long pageSize;
     //问卷标题
-    private String paintingName;
+    private String title;
 }

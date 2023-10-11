@@ -6,11 +6,13 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.elec5619.drawingsquare.common.utils.ResultUtils;
 import com.elec5619.drawingsquare.common.utils.ResultVo;
 
+import com.elec5619.drawingsquare.web.painting.entity.Liked;
 import com.elec5619.drawingsquare.web.painting.entity.Painting;
+import com.elec5619.drawingsquare.web.painting.entity.PaintingBuy;
+import com.elec5619.drawingsquare.web.painting.service.PaintingService;
 import com.elec5619.drawingsquare.web.user.entity.User;
 import com.elec5619.drawingsquare.web.user.entity.UserParm;
 import com.elec5619.drawingsquare.web.user.service.UserService;
-import io.micrometer.common.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,6 +24,9 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
     @Autowired
     public UserService userService;
+
+    @Autowired
+    public PaintingService paintingService;
     /**
      * 用户登录
      */
@@ -34,15 +39,15 @@ public class UserController {
         if(one == null){
             return ResultUtils.error("用户名或密码错误");
         }
-        return ResultUtils.success("登录成功",one.getUserId());
+        return ResultUtils.success("登录成功",one);
     }
     /**
      * 获取用户信息
      */
-    @GetMapping("/getInfo")
-    public ResultVo getInfo(Long userId){
+    @GetMapping("/getUserInfo")
+    public ResultVo getUserInfo(Long userId){
         User user = userService.getById(userId);
-        return ResultUtils.success("查询成功",user.getUsername());
+        return ResultUtils.success("查询成功",user);
     }
     /**
      * 新增
@@ -95,5 +100,34 @@ public class UserController {
         query.lambda().like(User::getUsername, userParm.getUsername());
         IPage<User> list = userService.page(page, query);
         return ResultUtils.success("查询成功",list);
+    }
+
+    /**
+     * 画作交易方法
+     * 参数：购买者id，购买者money，画作拥有者id，画作拥有者money，画作价格
+     * 返回：success
+     */
+    @PostMapping("/buy")
+    public ResultVo buy(@RequestBody PaintingBuy paintingBuy) {
+        // 1. 查询用户信息
+        User sysUser = userService.getById(paintingBuy.getSysUserId());
+        User user = userService.getById(paintingBuy.getUserId());
+
+        // 3. 更新金额
+        if(sysUser.getMoney() >= paintingBuy.getPrice()) {
+            sysUser.setMoney((int) (sysUser.getMoney() - paintingBuy.getPrice()));
+            user.setMoney((int) (user.getMoney() + paintingBuy.getPrice()));
+            // 4. 保存更新后的用户信息到数据库
+            boolean a = userService.saveOrUpdate(sysUser);
+            boolean b = userService.saveOrUpdate(user);
+            if(a && b) {
+                return ResultUtils.success("Purchase successful");
+            } else {
+                return ResultUtils.error("Purchase failed");
+            }
+        } else {
+            return ResultUtils.error("Purchase failed");
+        }
+
     }
 }

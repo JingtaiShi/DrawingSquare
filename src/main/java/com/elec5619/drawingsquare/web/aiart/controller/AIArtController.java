@@ -48,9 +48,9 @@ public class AIArtController {
         Response response = HTTP_CLIENT.newCall(req).execute();
         // System.out.println(response.body().string());
         String value = response.body().string();
-        // System.out.println(value);
+        System.out.println(value);
         taskId = value.substring(18, 26);
-        // System.out.println(taskId);
+        System.out.println(taskId);
         return value;
     }
 
@@ -81,7 +81,7 @@ public class AIArtController {
                 return responseBody;
             } else {
                 // 任务未完成，等待一段时间后继续查询
-                Thread.sleep(500); // 等待1秒钟后再次查询
+                Thread.sleep(5000); // 等待5s后再次查询
             }
         }
 

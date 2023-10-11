@@ -17,11 +17,11 @@ public class Admin implements Serializable {
     private int adminId;
 
     // 登陆账户
-    @TableField("admin_name)")
-    private String adminName;
+    @TableField("admin_name")
+    private String username;
 
     // 登陆密码
-    @TableField("adminPassword")
-    private String adminPassword;
+    @TableField("admin_password")
+    private String password;
 
 }

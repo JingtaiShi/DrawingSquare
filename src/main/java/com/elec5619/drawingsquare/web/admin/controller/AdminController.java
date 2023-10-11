@@ -24,11 +24,11 @@ public class AdminController {
     /**
      * 用户登录
      */
-    @PostMapping("/login")
-    public ResultVo login(@RequestBody Admin admin){
+    @PostMapping("/AdminLogin")
+    public ResultVo AdminLogin(@RequestBody Admin admin){
         QueryWrapper<Admin> query = new QueryWrapper<>();
-        query.lambda().eq(Admin::getAdminName,admin.getAdminName())
-                .eq(Admin::getAdminPassword,admin.getAdminPassword());
+        query.lambda().eq(Admin::getUsername, admin.getUsername())
+                .eq(Admin::getPassword, admin.getPassword());
         Admin one = adminService.getOne(query);
         if(one == null){
             return ResultUtils.error("用户名或密码错误");
@@ -41,7 +41,7 @@ public class AdminController {
     @GetMapping("/getInfo")
     public ResultVo getInfo(Long adminId){
         Admin admin = adminService.getById(adminId);
-        return ResultUtils.success("查询成功",admin.getAdminName());
+        return ResultUtils.success("查询成功",admin.getUsername());
     }
     /**
      * 新增

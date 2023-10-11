@@ -6,21 +6,16 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
-import java.io.Serializable;
-
 @Data
-@TableName("painting_attributes")
-public class PaintingAttributes implements Serializable {
+@TableName("purchased")
+public class Purchased {
 
     @TableId(type = IdType.AUTO)
-    // 属性Id
-    private int attributesId;
+    private int purchasedId;
 
-    // 绘画Id
+    @TableField("user_id")
+    private int sysUserId;
+
     @TableField("painting_id")
     private int paintingId;
-
-    // 属性名称
-    @TableField("attributes_name")
-    private String attributesName;
 }

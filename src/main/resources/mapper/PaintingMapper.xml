@@ -4,12 +4,6 @@
 
 <mapper namespace="com.elec5619.drawingsquare.web.painting.mapper.PaintingMapper">
 
-<select id="listAttribute" resultType="com.elec5619.drawingsquare.web.painting.entity.PaintingAttributes">
-    select  * from painting_attributes
-    where
-        painting_id =#{paintingId}
-    </select>
-
 <select id="listLikedPainting" resultType="com.elec5619.drawingsquare.web.painting.entity.Painting">
     select * from painting, likes
     where
