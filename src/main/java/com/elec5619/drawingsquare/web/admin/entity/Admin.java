@@ -8,19 +8,19 @@ import lombok.Data;
 
 import java.io.Serializable;
 
-@Data // 自动生成get和set方法
-@TableName("admin") // 指定Admin对应表名为admin
+@Data // generate getter and setter
+@TableName("admin") // Bind class to a database table
 public class Admin implements Serializable {
 
-    // 指明主键，自动递增
+    // Primary key, auto increase
     @TableId(type = IdType.AUTO)
     private int adminId;
 
-    // 登陆账户
+
     @TableField("admin_name")
     private String username;
 
-    // 登陆密码
+
     @TableField("admin_password")
     private String password;
 

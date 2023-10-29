@@ -7,23 +7,10 @@ import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 /**
- * 跨域配置
+ * Cross-domain configuration
  */
 @Configuration
 public class WebMvcConfig implements WebMvcConfigurer {
-    //获取图片加载路径
-    @Value("${web.load-path}")
-    private String loadPath;
-
-    /**
-     * 解决图片访问不到的问题
-     * @param registry
-     */
-    @Override
-    public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("/images/**").addResourceLocations(loadPath);
-    }
-
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")

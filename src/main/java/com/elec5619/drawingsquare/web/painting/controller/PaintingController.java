@@ -21,7 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 图画控制器
+ * Painting controller
  */
 @RestController
 @RequestMapping("/api/painting")
@@ -36,38 +36,38 @@ public class PaintingController {
     private LikedService likedService;
 
     /**
-     * 根据用户id查询用户生成的画作
-     * 参数: 用户id
-     * 返回: 画作列表
+     * Query user-generated paintings based on user id
+     * params: userId
+     * return: paintingList
      */
     @GetMapping("/getHistoryList")
     public ResultVo getHistoryList(Long userId){
-        // 构造查询条件
+        // Construct query condition
         QueryWrapper<Painting> query = new QueryWrapper<>();
 
         query.lambda().eq(Painting::getUserId, userId);
 
-        // 根据生成顺序排序
+        // Sort according to build order
         query.lambda().orderByDesc(Painting::getPaintingId);
 
         List<Painting> paintings = paintingService.list(query);
 
-        return ResultUtils.success("查询成功",paintings);
+        return ResultUtils.success("query successful",paintings);
     }
 
     @GetMapping("/getLikedPaintingList")
     public ResultVo getLikedPaintingList(Long userId) {
-        // 1. 构造查询条件，从 Purchased 表中查找匹配 userId 的 paintingId
+        // Construct a query condition to find the paintingId matching userId from the Liked table
         QueryWrapper<Liked> likedQueryWrapper = new QueryWrapper<>();
         likedQueryWrapper.lambda().eq(Liked::getSysUserId, userId);
         likedQueryWrapper.lambda().orderByDesc(Liked::getLikesId);
         List<Liked> likedList = likedService.list(likedQueryWrapper);
 
-        // 2. 根据找到的 paintingId 查询 Painting 表中的信息
+        // Query the information in the Painting table according to the paintingId found
         List<Painting> paintingList = new ArrayList<>();
         for (Liked liked : likedList) {
             int paintingId = liked.getPaintingId();
-            // 构造查询条件，从 Painting 表中查找匹配 paintingId 的信息
+            // Construct the query criteria to find information matching the paintingId from the Painting table
             QueryWrapper<Painting> paintingQuery = new QueryWrapper<>();
             paintingQuery.lambda().eq(Painting::getPaintingId, paintingId);
             Painting painting = paintingService.getOne(paintingQuery);
@@ -75,28 +75,28 @@ public class PaintingController {
                 paintingList.add(painting);
             }
         }
-        return ResultUtils.success("查询成功",paintingList);
+        return ResultUtils.success("query successful",paintingList);
     }
 
     /**
-     * 根据用户的id获取他购买的画作列表
-     * 参数：用户id
-     * 返回：画作列表
+     * Query user-purchased paintings based on user id
+     * params: userId
+     * return: paintingList
      *
      */
-    @GetMapping("/getPruchesedPaintingList")
-    public ResultVo getPruchesedPaintingList(Long userId) {
-        // 1. 构造查询条件，从 Purchased 表中查找匹配 userId 的 paintingId
+    @GetMapping("/getPurchasedPaintingList")
+    public ResultVo getPurchasedPaintingList(Long userId) {
+        // Construct a query condition to find the paintingId matching userId from the Purchased table
         QueryWrapper<Purchased> purchasedQuery = new QueryWrapper<>();
         purchasedQuery.lambda().eq(Purchased::getSysUserId, userId);
         purchasedQuery.lambda().orderByDesc(Purchased::getPurchasedId);
         List<Purchased> purchasedList = purchasedService.list(purchasedQuery);
 
-        // 2. 根据找到的 paintingId 查询 Painting 表中的信息
+        // Query the information in the Painting table according to the paintingId found
         List<Painting> paintingList = new ArrayList<>();
         for (Purchased purchased : purchasedList) {
             int paintingId = purchased.getPaintingId();
-            // 构造查询条件，从 Painting 表中查找匹配 paintingId 的信息
+            // Construct the query criteria to find information matching the paintingId from the Painting table
             QueryWrapper<Painting> paintingQuery = new QueryWrapper<>();
             paintingQuery.lambda().eq(Painting::getPaintingId, paintingId);
             Painting painting = paintingService.getOne(paintingQuery);
@@ -104,44 +104,44 @@ public class PaintingController {
                 paintingList.add(painting);
             }
         }
-        return ResultUtils.success("查询成功",paintingList);
+        return ResultUtils.success("query successful",paintingList);
     }
 
     /**
-     * 将购买的图片添加进购买库中addImageToLibrary
+     * add purchased image to purchased library
      */
     @PostMapping("/addImageToLibrary")
     public ResultVo addImageToLibrary(@RequestBody Purchased purchased) {
-        // 在购买库中执行查询，检查是否已经存在相同的记录
+        // Perform a query in the purchase table to check if the same record already exists
         QueryWrapper<Purchased> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("user_id", purchased.getSysUserId()); // 假设存在一个"user_id"字段
-        queryWrapper.eq("painting_id", purchased.getPaintingId()); // 假设存在一个"painting_id"字段
+        queryWrapper.eq("user_id", purchased.getSysUserId());
+        queryWrapper.eq("painting_id", purchased.getPaintingId());
         Purchased existingPurchase = purchasedService.getOne(queryWrapper);
 
         if (existingPurchase != null) {
-            return ResultUtils.error("已经购买过此图画!");
+            return ResultUtils.error("This drawing has been purchased!");
         }
 
         boolean save = purchasedService.save(purchased);
         if (save) {
-            return ResultUtils.success("购买图画成功!");
+            return ResultUtils.success("Purchase drawing success!");
         }
-        return ResultUtils.error("购买图画失败!");
+        return ResultUtils.error("Purchase drawing error!");
     }
 
     /**
-     * 将喜爱的图片添加进喜爱库中
+     * add liked image to liked library
      */
     @PostMapping("/like")
     public ResultVo like(@RequestBody Liked liked) {
-        // 在喜爱库中执行查询，检查是否已经存在相同的记录
+        // Perform a query in the liked table to check if the same record already exists
         QueryWrapper<Liked> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("user_id", liked.getSysUserId()); // 假设存在一个"user_id"字段
-        queryWrapper.eq("painting_id", liked.getPaintingId()); // 假设存在一个"painting_id"字段
+        queryWrapper.eq("user_id", liked.getSysUserId());
+        queryWrapper.eq("painting_id", liked.getPaintingId());
         Liked existingLiked = likedService.getOne(queryWrapper);
 
         if (existingLiked != null) {
-            return ResultUtils.error("已经收藏过此图画!");
+            return ResultUtils.error("Have collected this picture!");
         }
 
         Painting painting = paintingService.getById(liked.getPaintingId());
@@ -149,40 +149,40 @@ public class PaintingController {
         boolean save = likedService.save(liked);
         boolean update = paintingService.saveOrUpdate(painting);
         if (save && update) {
-            return ResultUtils.success("收藏图画成功!");
+            return ResultUtils.success("Picture collection success!");
         }
-        return ResultUtils.error("收藏图画失败!");
+        return ResultUtils.error("Picture collection error!");
     }
     /**
-     * 将喜爱的图片移除喜爱库
+     * Remove a liked image from your liked table
      */
     @PostMapping("/remove")
     public ResultVo removeLike(@RequestBody Liked liked) {
         Painting painting = paintingService.getById(liked.getPaintingId());
         painting.setLikes(painting.getLikes() - 1);
-        // 创建 QueryWrapper 对象并设置查询条件
+        // Create the QueryWrapper object and set the query criteria
         QueryWrapper<Liked> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("painting_id", liked.getPaintingId()); // 设置删除条件
+        queryWrapper.eq("painting_id", liked.getPaintingId()); // Set deletion conditions
 
-        boolean remove = likedService.remove(queryWrapper); // 使用 QueryWrapper 来删除数据
+        boolean remove = likedService.remove(queryWrapper); // Use QueryWrapper to delete the data
         boolean update = paintingService.saveOrUpdate(painting);
         if (remove && update) {
-            return ResultUtils.success("取消收藏图画成功!");
+            return ResultUtils.success("Remove liked drawing success!");
         }
-        return ResultUtils.error("取消收藏图画失败!");
+        return ResultUtils.error("Remove liked drawing error!");
     }
 
 
     /**
-     * 获取图画信息
+     * get drawing information
      */
     @GetMapping("/getImgInfo")
     public ResultVo getInfo(Long paintingId){
         Painting painting = paintingService.getById(paintingId);
-        return ResultUtils.success("查询成功",painting);
+        return ResultUtils.success("query successful",painting);
     }
     /**
-     * 新增图画
+     * add drawing
      *
      * @param painting
      * @return
@@ -192,15 +192,15 @@ public class PaintingController {
         if(paintingService.getById(painting.getPaintingId()) != null) {
             boolean update = paintingService.updateById(painting);
             if (update) {
-                return ResultUtils.success("编辑图画成功!");
+                return ResultUtils.success("edit drawing successful");
             }
-            return ResultUtils.error("编辑图画失败!");
+            return ResultUtils.error("edit drawing error!");
         } else {
             boolean save = paintingService.save(painting);
             if (save) {
-                return ResultUtils.success("新增图画成功!");
+                return ResultUtils.success("add drawing successful!");
             }
-            return ResultUtils.error("新增图画失败!");
+            return ResultUtils.error("add drawing error");
 
         }
 
@@ -208,19 +208,19 @@ public class PaintingController {
     }
 
     /**
-     * 编辑图画
+     * edit drawings
      */
     @PutMapping
     public ResultVo edit(@RequestBody Painting painting) {
         boolean b = paintingService.updateById(painting);
         if (b) {
-            return ResultUtils.success("编辑图画成功!");
+            return ResultUtils.success("edit drawings successful!");
         }
-        return ResultUtils.error("编辑图画失败!");
+        return ResultUtils.error("edit drawings error!");
     }
 
     /**
-     * 删除绘画
+     * delete drawings
      *
      * @return
      */
@@ -228,26 +228,26 @@ public class PaintingController {
     public ResultVo delete(@PathVariable("paintingId") int paintingId) {
         boolean b = paintingService.removeById(paintingId);
         if (b) {
-            return ResultUtils.success("删除画图成功!");
+            return ResultUtils.success("delete drawing successful!");
         }
-        return ResultUtils.error("删除画图失败!");
+        return ResultUtils.error("delete drawing error!");
     }
 
     /**
-     * 根据tag搜索绘画列表
-     * 参数：tag
-     * 返回值：绘画列表
+     * Search the list of paintings according to tag
+     * params：tag
+     * return：painting list
      */
     @GetMapping("/searchImage")
     public ResultVo searchImage(String tag) {
-        // 构造查询条件
+        // Construct query condition
         QueryWrapper<Painting> query = new QueryWrapper<>();
 
         if(StringUtils.isNotEmpty(tag)) {
             query.lambda().like(Painting::getTag, tag);
         }
 
-        // 根据点赞量排序
+        // Sort by likes
         query.lambda().orderByDesc(Painting::getLikes);
 
         List<Painting> paintings = paintingService.list(query);
@@ -273,37 +273,37 @@ public class PaintingController {
         list.add(painting2);
         list.add(painting3);
         list.add(painting4);
-        return ResultUtils.success("查询成功", list);
+        return ResultUtils.success("query successful", list);
     }
 
     /**
-     * 绘画列表
+     * get painting list
      */
     @GetMapping("/list")
     public ResultVo getList(PaintingParm paintingParm) {
-        // 构造分页对象
+        // Construct paging objects
         IPage<Painting> page = new Page<>();
         page.setSize(paintingParm.getPageSize());
         page.setCurrent(paintingParm.getCurrentPage());
-        // 构造查询条件
+        // Construct query condition
         QueryWrapper<Painting> query = new QueryWrapper<>();
-        // 模糊查询
+        // fuzzy query
         if (StringUtils.isNotEmpty(paintingParm.getTitle())) {
             query.lambda().like(Painting::getTitle, paintingParm.getTitle());
         }
-        // 根据点赞量排序
+        // Sort by likes
         query.lambda().orderByDesc(Painting::getLikes);
         IPage<Painting> list = paintingService.page(page, query);
-        return ResultUtils.success("查询成功", list);
+        return ResultUtils.success("query successful", list);
     }
 
 
     @GetMapping("/gallary")
     public ResultVo getList() {
-        // 构造查询条件
+        // Construct paging objects
         QueryWrapper<Painting> query = new QueryWrapper<>();
         query.eq("painting_status", 1);
-        // 根据点赞量排序
+        // Sort by likes
         query.lambda().orderByDesc(Painting::getLikes);
 
         List<Painting> paintings = paintingService.list(query);
@@ -329,7 +329,7 @@ public class PaintingController {
         list.add(painting2);
         list.add(painting3);
         list.add(painting4);
-        return ResultUtils.success("查询成功", list);
+        return ResultUtils.success("query successful", list);
     }
 
 

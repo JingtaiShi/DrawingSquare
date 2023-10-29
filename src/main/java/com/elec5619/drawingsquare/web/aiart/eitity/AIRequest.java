@@ -13,11 +13,11 @@ public class AIRequest {
     private Integer num;
 
     public RequestBody toRequestBody() {
-        // 使用 Gson 库将对象序列化为 JSON 字符串
+        // Use the Gson library to serialize objects to JSON strings
         Gson gson = new Gson();
         String json = gson.toJson(this);
 
-        // 创建 JSON 类型的 RequestBody
+        // Create a RequestBody of type JSON
         MediaType mediaType = MediaType.parse("application/json; charset=utf-8");
         RequestBody requestBody = RequestBody.create(mediaType, json);
 

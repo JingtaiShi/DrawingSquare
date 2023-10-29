@@ -1,7 +1,7 @@
-#端口号配置
+#Port number configuration
 server:
   port: 8089
-#数据库连接配置
+#Database connection configuration
 spring:
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource
@@ -10,17 +10,13 @@ spring:
     username: root
     password: 123456
 
-web:
-  uploadpath: D:/drawingsquare/images/    #图片上传的路径
-  load-path: file:D://drawingsquare/images/    #图片访问的路径
-
-#mybatis plus配置
+#mybatis plus  configuration
 mybatis-plus:
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
   global-config:
     db-config:
-      #配置mybatis plus 在更新时只更新非空和非NULL的字段
+      # Configure mybatis plus to update only non-null and non-null fields at update time
       update-strategy: not_empty
 
 logging:

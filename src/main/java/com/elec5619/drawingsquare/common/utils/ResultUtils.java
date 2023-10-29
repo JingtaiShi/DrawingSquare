@@ -1,11 +1,11 @@
 package com.elec5619.drawingsquare.common.utils;
 import com.elec5619.drawingsquare.common.status.StatusCode;
 /**
- * 数据返回工具类
+ * Utils of result data
  */
 public class ResultUtils {
     /**
-     * 无参数返回
+     * no parameters
      * @return
      */
     public static ResultVo succcess() {
@@ -15,7 +15,7 @@ public class ResultUtils {
         return Vo(msg,StatusCode.SUCCESS_CODE,null);
     }
     /**
-     * 返回带参数
+     * has parameters
      * @param msg
      * @param data
      * @return
@@ -30,7 +30,7 @@ public class ResultUtils {
         return new ResultVo(msg, code, data);
     }
     /**
-     * 错误返回
+     * return error
      * @return
      */
     public static ResultVo error(){

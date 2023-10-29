@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 
 /**
- * 通用返回值的封装
+ * encapsulation of common return value
  * @author Rocky
  * @create 2022-01-1311:08
  */

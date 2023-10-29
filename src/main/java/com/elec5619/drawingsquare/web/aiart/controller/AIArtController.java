@@ -72,26 +72,26 @@ public class AIArtController {
             System.out.println(responseBody);
             response.close();
 
-            // 解析响应并检查任务状态
+            // Parse the response and check the task status
             JSONObject jsonResponse = new JSONObject(responseBody);
             int status = jsonResponse.getJSONObject("data").getInt("status");
 
             if (status == 1) {
-                // 任务已完成，返回生成的图片结果
+                // task is complete and the result of the generated image is returned
                 return responseBody;
             } else {
-                // 任务未完成，等待一段时间后继续查询
-                Thread.sleep(5000); // 等待5s后再次查询
+                // If the task is not complete, wait for a period of time and continue the query
+                Thread.sleep(5000); // Wait 5 seconds and query again
             }
         }
 
     }
 
     /**
-     * 从用户的AK，SK生成鉴权签名（Access Token）
+     * Generate an Access Token from a user's AK, SK
      *
-     * @return 鉴权签名（Access Token）
-     * @throws IOException IO异常
+     * @return Access Token
+     * @throws IOException
      */
     private static String getAccessToken() {
         HttpURLConnection connection = null;
@@ -133,7 +133,7 @@ public class AIArtController {
                 }
             }
         }
-        //取出返回的access_token
+        // Retrieve the returned access token
         com.alibaba.fastjson.JSONObject jsonObject = JSON.parseObject(response.toString());
         String accessToken = jsonObject.getString("access_token");
         return accessToken;
